@@ -1,277 +1,459 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quranic Solutions</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-</head>
-<body class="bg-gray-100">
-    <div id="app" class="container mx-auto p-4">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800">Quranic Solutions</h1>
-            <p class="text-gray-600">A categorized collection of solutions from the Holy Quran.</p>
-        </header>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Quranic Solutions</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	</head>
+	<body class="bg-gray-100">
+		<div
+			id="app"
+			class="container mx-auto p-4"
+		>
+			<header class="text-center mb-8">
+				<h1 class="text-4xl font-bold text-gray-800">Quranic Solutions</h1>
+				<p class="text-gray-600">
+					A categorized collection of solutions from the Holy Quran.
+				</p>
+			</header>
 
-        <div class="mb-8">
-            <label for="search" class="block text-sm font-medium text-gray-700">Search Solutions:</label>
-            <div class="relative">
-                <input type="text" id="search" v-model="searchText" placeholder="e.g., Faith, Justice, Family" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                <button v-if="searchText" @click="clearSearch" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+			<div class="mb-8">
+				<label
+					for="search"
+					class="block text-sm font-medium text-gray-700"
+					>Search Solutions:</label
+				>
+				<div class="relative">
+					<input
+						type="text"
+						id="search"
+						v-model="searchText"
+						placeholder="e.g., Faith, Justice, Family"
+						class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
+					/>
+					<button
+						v-if="searchText"
+						@click="clearSearch"
+						class="absolute inset-y-0 right-0 pr-3 flex items-center"
+					>
+						<svg
+							class="h-5 w-5 text-gray-400"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+								clip-rule="evenodd"
+							/>
+						</svg>
+					</button>
+				</div>
+			</div>
 
-        <div class="flex space-x-4 mb-8">
-            <div class="w-1/2">
-                <label for="languages" class="block text-sm font-medium text-gray-700">Select Language:</label>
-                <select id="languages" v-model="selectedLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                    <option value="">All</option>
-                    <option v-for="language in languages" :value="language">{{ language }}</option>
-                </select>
-            </div>
-            <div class="w-1/2">
-                <label for="editions" class="block text-sm font-medium text-gray-700">Select Edition:</label>
-                <select id="editions" v-model="selectedEdition" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                    <option v-for="edition in editions" :value="edition.identifier">{{ edition.englishName }}</option>
-                </select>
-            </div>
-        </div>
+			<div class="flex space-x-4 mb-8">
+				<div class="w-1/2">
+					<label
+						for="languages"
+						class="block text-sm font-medium text-gray-700"
+						>Select Language:</label
+					>
+					<select
+						id="languages"
+						v-model="selectedLanguage"
+						class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
+					>
+						<option value="">All</option>
+						<option
+							v-for="language in languages"
+							:value="language"
+						>
+							{{ language }}
+						</option>
+					</select>
+				</div>
+				<div class="w-1/2">
+					<label
+						for="editions"
+						class="block text-sm font-medium text-gray-700"
+						>Select Edition:</label
+					>
+					<select
+						id="editions"
+						v-model="selectedEdition"
+						class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
+					>
+						<option
+							v-for="edition in editions"
+							:value="edition.identifier"
+						>
+							{{ edition.englishName }}
+						</option>
+					</select>
+				</div>
+			</div>
 
-        <div v-for="(category, categoryName) in filteredQuranicSolutions" :key="categoryName" class="mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-2 border-gray-300 pb-2">{{ categoryName }}</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="(solution, solutionName) in category" :key="solutionName" class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ solutionName }}</h3>
-                    <p class="text-gray-600 mb-4">{{ solution.Summary }}</p>
-                    <ul class="space-y-2">
-                        <li v-for="example in solution.Examples">
-                            <div v-if="example.surah" class="p-4 rounded-md bg-gray-50">
-                                <p class="font-semibold text-gray-700">{{ example.surah }} ({{ example.surah_number }}:{{ example.ayah_range }})</p>
-                                <p class="text-sm text-gray-500">{{ example.text }}</p>
-                                <button @click="getAyahs(example.surah_number, example.ayah_range)" class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-sm transition duration-300 ease-in-out">Get Ayahs</button>
-                            </div>
-                            <span v-else class="text-gray-600">{{ example }}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+			<div
+				v-for="(category, categoryName) in filteredQuranicSolutions"
+				:key="categoryName"
+				class="mb-8"
+			>
+				<h2
+					class="text-3xl font-bold text-gray-800 mb-4 border-b-2 border-gray-300 pb-2"
+				>
+					{{ categoryName }}
+				</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div
+						v-for="(solution, solutionName) in category"
+						:key="solutionName"
+						class="bg-white rounded-lg shadow-md p-6"
+					>
+						<h3 class="text-xl font-semibold text-gray-800 mb-2">
+							{{ solutionName }}
+						</h3>
+						<p class="text-gray-600 mb-4">{{ solution.Summary }}</p>
+						<ul class="space-y-2">
+							<li v-for="example in solution.Examples">
+								<div
+									v-if="example.surah"
+									class="p-4 rounded-md bg-gray-50"
+								>
+									<p class="font-semibold text-gray-700">
+										{{ example.surah }} ({{ example.surah_number }}:{{
+										example.ayah_range }})
+									</p>
+									<p class="text-sm text-gray-500">{{ example.text }}</p>
+									<button
+										@click="getAyahs(example.surah_number, example.ayah_range)"
+										class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-sm transition duration-300 ease-in-out"
+									>
+										Get Ayahs
+									</button>
+								</div>
+								<span
+									v-else
+									class="text-gray-600"
+									>{{ example }}</span
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 
-        <div v-if="loading" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-            <div class="text-white text-2xl font-bold">Loading...</div>
-        </div>
+			<div
+				v-if="loading"
+				class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50"
+			>
+				<div class="text-white text-2xl font-bold">Loading...</div>
+			</div>
 
-        <div v-if="ayahs.length > 0" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50" @click="closeModal">
-            <div class="bg-white p-8 rounded-lg shadow-xl max-w-3xl w-full mx-4" @click.stop>
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-bold text-gray-800">Ayahs from {{ selectedEditionName }}</h2>
-                    <button @click="closeModal" class="text-gray-500 hover:text-gray-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
+			<div
+				v-if="ayahs.length > 0"
+				class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50"
+				@click="closeModal"
+			>
+				<div
+					class="bg-white p-8 rounded-lg shadow-xl max-w-3xl w-full mx-4"
+					@click.stop
+				>
+					<div class="flex justify-between items-center mb-4">
+						<h2 class="text-2xl font-bold text-gray-800">
+							Ayahs from {{ selectedEditionName }}
+						</h2>
+						<button
+							@click="closeModal"
+							class="text-gray-500 hover:text-gray-700"
+						>
+							<svg
+								class="w-6 h-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M6 18L18 6M6 6l12 12"
+								></path>
+							</svg>
+						</button>
+					</div>
 
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="modal-languages" class="block text-sm font-medium text-gray-700">Select Language:</label>
-                        <select id="modal-languages" v-model="selectedLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                            <option value="">All</option>
-                            <option v-for="language in languages" :value="language">{{ language }}</option>
-                        </select>
-                    </div>
-                    <div class="w-1/2">
-                        <label for="modal-editions" class="block text-sm font-medium text-gray-700">Select Edition:</label>
-                        <select id="modal-editions" v-model="selectedEdition" @change="onEditionChangeInModal" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                            <option v-for="edition in editions" :value="edition.identifier">{{ edition.englishName }}</option>
-                        </select>
-                    </div>
-                </div>
+					<div class="flex space-x-4 mb-4">
+						<div class="w-1/2">
+							<label
+								for="modal-languages"
+								class="block text-sm font-medium text-gray-700"
+								>Select Language:</label
+							>
+							<select
+								id="modal-languages"
+								v-model="selectedLanguage"
+								class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
+							>
+								<option value="">All</option>
+								<option
+									v-for="language in languages"
+									:value="language"
+								>
+									{{ language }}
+								</option>
+							</select>
+						</div>
+						<div class="w-1/2">
+							<label
+								for="modal-editions"
+								class="block text-sm font-medium text-gray-700"
+								>Select Edition:</label
+							>
+							<select
+								id="modal-editions"
+								v-model="selectedEdition"
+								@change="onEditionChangeInModal"
+								class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
+							>
+								<option
+									v-for="edition in editions"
+									:value="edition.identifier"
+								>
+									{{ edition.englishName }}
+								</option>
+							</select>
+						</div>
+					</div>
 
-                <div class="text-center mb-4">
-                    <button @click="showFullSurah = true" v-if="!showFullSurah" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-sm transition duration-300 ease-in-out">Read Full Surah</button>
-                </div>
+					<div class="text-center mb-4">
+						<button
+							@click="showFullSurah = true"
+							v-if="!showFullSurah"
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-sm transition duration-300 ease-in-out"
+						>
+							Read Full Surah
+						</button>
+					</div>
 
-                <ul class="space-y-4 max-h-96 overflow-y-auto pr-4">
-                    <li v-for="ayah in displayedAyahs" :key="ayah.number" class="border-b border-gray-200 pb-2">
-                        <p class="text-lg text-gray-800"><span class="font-bold">{{ ayah.numberInSurah }}:</span> {{ ayah.text }}</p>
-                    </li>
-                </ul>
-            </div>
-        </div>
+					<ul class="space-y-4 max-h-96 overflow-y-auto pr-4">
+						<li
+							v-for="ayah in displayedAyahs"
+							:key="ayah.number"
+							class="border-b border-gray-200 pb-2"
+						>
+							<p class="text-lg text-gray-800">
+								<span class="font-bold">{{ ayah.numberInSurah }}:</span> {{
+								ayah.text }}
+							</p>
+						</li>
+					</ul>
+				</div>
+			</div>
 
-        <div v-if="error" class="fixed bottom-0 right-0 mb-4 mr-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg">
-            <span>{{ error }}</span>
-            <button @click="error = null" class="ml-4 text-white font-bold">X</button>
-        </div>
-    </div>
+			<div
+				v-if="error"
+				class="fixed bottom-0 right-0 mb-4 mr-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg"
+			>
+				<span>{{ error }}</span>
+				<button
+					@click="error = null"
+					class="ml-4 text-white font-bold"
+				>
+					X
+				</button>
+			</div>
+		</div>
 
-    <script>
-        const { createApp } = Vue
+		<script>
+			const { createApp } = Vue;
 
-        createApp({
-            data() {
-                return {
-                    title: 'Comprehensive Quranic Solutions Categorization',
-                    quranicSolutions: {},
-                    ayahs: [],
-                    loading: false,
-                    editions: [],
-                    selectedEdition: localStorage.getItem('selectedEdition') || 'quran-uthmani',
-                    currentSurah: null,
-                    languages: [],
-                    selectedLanguage: localStorage.getItem('selectedLanguage') || '',
-                    searchText: '',
-                    error: null,
-                    showFullSurah: false
-                }
-            },
-            watch: {
-                selectedLanguage(newLanguage) {
-                    localStorage.setItem('selectedLanguage', newLanguage);
-                    this.fetchEditions(newLanguage).then(() => {
-                        if (this.currentSurah) {
-                            this.getAyahs(this.currentSurah.surahNumber, this.currentSurah.ayahRange);
-                        }
-                    });
-                },
-                selectedEdition(newEdition) {
-                    localStorage.setItem('selectedEdition', newEdition);
-                }
-            },
-            computed: {
-                selectedEditionName() {
-                    const edition = this.editions.find(e => e.identifier === this.selectedEdition);
-                    return edition ? edition.englishName : this.selectedEdition;
-                },
-                filteredQuranicSolutions() {
-                    if (!this.searchText) {
-                        return this.quranicSolutions;
-                    }
+			createApp({
+				data() {
+					return {
+						title: "Comprehensive Quranic Solutions Categorization",
+						quranicSolutions: {},
+						ayahs: [],
+						loading: false,
+						editions: [],
+						selectedEdition:
+							localStorage.getItem("selectedEdition") || "quran-uthmani",
+						currentSurah: null,
+						languages: [],
+						selectedLanguage: localStorage.getItem("selectedLanguage") || "",
+						searchText: "",
+						error: null,
+						showFullSurah: false,
+					};
+				},
+				watch: {
+					selectedLanguage(newLanguage) {
+						localStorage.setItem("selectedLanguage", newLanguage);
+						this.fetchEditions(newLanguage).then(() => {
+							if (this.currentSurah) {
+								this.getAyahs(
+									this.currentSurah.surahNumber,
+									this.currentSurah.ayahRange
+								);
+							}
+						});
+					},
+					selectedEdition(newEdition) {
+						localStorage.setItem("selectedEdition", newEdition);
+					},
+				},
+				computed: {
+					selectedEditionName() {
+						const edition = this.editions.find(
+							(e) => e.identifier === this.selectedEdition
+						);
+						return edition ? edition.englishName : this.selectedEdition;
+					},
+					filteredQuranicSolutions() {
+						if (!this.searchText) {
+							return this.quranicSolutions;
+						}
 
-                    const search = this.searchText.toLowerCase();
-                    const result = {};
+						const search = this.searchText.toLowerCase();
+						const result = {};
 
-                    for (const categoryName in this.quranicSolutions) {
-                        const category = this.quranicSolutions[categoryName];
-                        const filteredCategory = {};
+						for (const categoryName in this.quranicSolutions) {
+							const category = this.quranicSolutions[categoryName];
+							const filteredCategory = {};
 
-                        for (const solutionName in category) {
-                            const solution = category[solutionName];
-                            if (solutionName.toLowerCase().includes(search) || solution.Summary.toLowerCase().includes(search)) {
-                                filteredCategory[solutionName] = solution;
-                            }
-                        }
+							for (const solutionName in category) {
+								const solution = category[solutionName];
+								if (
+									solutionName.toLowerCase().includes(search) ||
+									solution.Summary.toLowerCase().includes(search)
+								) {
+									filteredCategory[solutionName] = solution;
+								}
+							}
 
-                        if (Object.keys(filteredCategory).length > 0) {
-                            result[categoryName] = filteredCategory;
-                        }
-                    }
+							if (Object.keys(filteredCategory).length > 0) {
+								result[categoryName] = filteredCategory;
+							}
+						}
 
-                    return result;
-                },
-                displayedAyahs() {
-                    if (this.showFullSurah || !this.currentSurah) {
-                        return this.ayahs;
-                    }
-                    const [start, end] = this.currentSurah.ayahRange.split('-').map(Number);
-                    const offset = start - 1;
-                    const limit = end ? (end - start + 1) : 1;
-                    return this.ayahs.slice(offset, offset + limit);
-                }
-            },
-            mounted() {
-                fetch('data.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        this.quranicSolutions = data['Comprehensive Quranic Solutions Categorization'];
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data.json:', error);
-                        this.error = 'Failed to load the solutions data.';
-                    });
-                
-                this.fetchLanguages();
-                this.fetchEditions(this.selectedLanguage);
-            },
-            methods: {
-                clearSearch() {
-                    this.searchText = '';
-                },
-                fetchLanguages() {
-                    return fetch('http://api.alquran.cloud/v1/edition/language')
-                        .then(response => response.json())
-                        .then(data => {
-                            this.languages = data.data;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching languages:', error);
-                            this.error = 'Failed to fetch languages.';
-                        });
-                },
-                fetchEditions(language = '') {
-                    this.loading = true;
-                    let url = 'http://api.alquran.cloud/v1/edition';
-                    if (language) {
-                        url = `http://api.alquran.cloud/v1/edition/language/${language}`;
-                    }
-                    return fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            this.editions = data.data;
-                            if (data.data.length > 0) {
-                                this.selectedEdition = data.data[0].identifier;
-                            }
-                            this.loading = false;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching editions:', error);
-                            this.error = 'Failed to fetch editions. Please try again later.';
-                            this.loading = false;
-                        });
-                },
-                getAyahs(surahNumber, ayahRange) {
-                    this.loading = true;
-                    this.currentSurah = { surahNumber, ayahRange };
-                    this.showFullSurah = false;
+						return result;
+					},
+					displayedAyahs() {
+						if (this.showFullSurah || !this.currentSurah) {
+							return this.ayahs;
+						}
+						const [start, end] = this.currentSurah.ayahRange
+							.split("-")
+							.map(Number);
+						const offset = start - 1;
+						const limit = end ? end - start + 1 : 1;
+						return this.ayahs.slice(offset, offset + limit);
+					},
+				},
+				mounted() {
+					fetch("data.json")
+						.then((response) => response.json())
+						.then((data) => {
+							this.quranicSolutions =
+								data["Comprehensive Quranic Solutions Categorization"];
+						})
+						.catch((error) => {
+							console.error("Error fetching data.json:", error);
+							this.error = "Failed to load the solutions data.";
+						});
 
-                    const storageKey = `surah_${surahNumber}_${this.selectedEdition}`;
-                    const cachedSurah = localStorage.getItem(storageKey);
+					this.fetchLanguages();
+					this.fetchEditions(this.selectedLanguage);
+				},
+				methods: {
+					clearSearch() {
+						this.searchText = "";
+					},
+					fetchLanguages() {
+						return fetch("https://api.alquran.cloud/v1/edition/language")
+							.then((response) => response.json())
+							.then((data) => {
+								this.languages = data.data;
+							})
+							.catch((error) => {
+								console.error("Error fetching languages:", error);
+								this.error = "Failed to fetch languages.";
+							});
+					},
+					fetchEditions(language = "") {
+						this.loading = true;
+						let url = "https://api.alquran.cloud/v1/edition";
+						if (language) {
+							url = `https://api.alquran.cloud/v1/edition/language/${language}`;
+						}
+						return fetch(url)
+							.then((response) => response.json())
+							.then((data) => {
+								this.editions = data.data;
+								if (data.data.length > 0) {
+									this.selectedEdition = data.data[0].identifier;
+								}
+								this.loading = false;
+							})
+							.catch((error) => {
+								console.error("Error fetching editions:", error);
+								this.error =
+									"Failed to fetch editions. Please try again later.";
+								this.loading = false;
+							});
+					},
+					getAyahs(surahNumber, ayahRange) {
+						this.loading = true;
+						this.currentSurah = { surahNumber, ayahRange };
+						this.showFullSurah = false;
 
-                    if (cachedSurah) {
-                        this.ayahs = JSON.parse(cachedSurah);
-                        this.loading = false;
-                    } else {
-                        fetch(`http://api.alquran.cloud/v1/surah/${surahNumber}/${this.selectedEdition}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.data && data.data.ayahs) {
-                                    this.ayahs = data.data.ayahs;
-                                    localStorage.setItem(storageKey, JSON.stringify(this.ayahs));
-                                }
-                                this.loading = false;
-                            })
-                            .catch(error => {
-                                console.error('Error fetching ayahs:', error);
-                                this.error = 'Failed to fetch ayahs. Please try again later.';
-                                this.loading = false;
-                            });
-                    }
-                },
-                closeModal() {
-                    this.ayahs = [];
-                    this.currentSurah = null;
-                },
-                onEditionChangeInModal() {
-                    if (this.currentSurah) {
-                        this.getAyahs(this.currentSurah.surahNumber, this.currentSurah.ayahRange);
-                    }
-                }
-            }
-        }).mount('#app')
-    </script>
-</body>
+						const storageKey = `surah_${surahNumber}_${this.selectedEdition}`;
+						const cachedSurah = localStorage.getItem(storageKey);
+
+						if (cachedSurah) {
+							this.ayahs = JSON.parse(cachedSurah);
+							this.loading = false;
+						} else {
+							fetch(
+								`https://api.alquran.cloud/v1/surah/${surahNumber}/${this.selectedEdition}`
+							)
+								.then((response) => response.json())
+								.then((data) => {
+									if (data.data && data.data.ayahs) {
+										this.ayahs = data.data.ayahs;
+										localStorage.setItem(
+											storageKey,
+											JSON.stringify(this.ayahs)
+										);
+									}
+									this.loading = false;
+								})
+								.catch((error) => {
+									console.error("Error fetching ayahs:", error);
+									this.error = "Failed to fetch ayahs. Please try again later.";
+									this.loading = false;
+								});
+						}
+					},
+					closeModal() {
+						this.ayahs = [];
+						this.currentSurah = null;
+					},
+					onEditionChangeInModal() {
+						if (this.currentSurah) {
+							this.getAyahs(
+								this.currentSurah.surahNumber,
+								this.currentSurah.ayahRange
+							);
+						}
+					},
+				},
+			}).mount("#app");
+		</script>
+	</body>
 </html>
