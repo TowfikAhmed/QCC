@@ -1,0 +1,757 @@
+{
+  "Comprehensive Quranic Solutions Categorization": {
+    "1. Personal / Individual Solutions": {
+      "1.1 Faith & Belief": {
+        "Summary": "Strengthening belief in Allah, trust in His plan, and maintaining Tawheed (monotheism).",
+        "Examples": [
+          {
+            "surah": "Surah Al-Ikhlas",
+            "surah_number": 112,
+            "ayah_range": "1-4",
+            "text": "The oneness of Allah."
+          },
+          {
+            "surah": "Surah Al-Fatihah",
+            "surah_number": 1,
+            "ayah_range": "5-7",
+            "text": "Prayer for guidance."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "2",
+            "text": "The Quran as guidance."
+          },
+          "See also: Section 1.9 Guidance in Daily Life and Section 4.1 Science & Nature."
+        ]
+      },
+      "1.2 Spiritual & Emotional Well-being": {
+        "Summary": "Maintaining hope, patience, and emotional resilience during hardships.",
+        "Examples": [
+          {
+            "surah": "Surah Ad-Duha",
+            "surah_number": 93,
+            "ayah_range": "1-3",
+            "text": "Allah's reassurance and support."
+          },
+          {
+            "surah": "Surah Ash-Sharh",
+            "surah_number": 94,
+            "ayah_range": "5-6",
+            "text": "Ease comes with hardship."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "155-157",
+            "text": "Patience in times of trial."
+          }
+        ]
+      },
+      "1.3 Moral & Ethical Conduct": {
+        "Summary": "Encouragement to adopt good character, honesty, humility, and avoid wrongdoing.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Ma’un",
+            "surah_number": 107,
+            "ayah_range": "1-7",
+            "text": "Importance of charity and prayer."
+          },
+          {
+            "surah": "Surah Luqman",
+            "surah_number": 31,
+            "ayah_range": "17-19",
+            "text": "Advice on good conduct."
+          },
+          {
+            "surah": "Surah Al-Furqan",
+            "surah_number": 25,
+            "ayah_range": "63-77",
+            "text": "Qualities of the servants of Allah."
+          }
+        ]
+      },
+      "1.4 Accountability & Afterlife": {
+        "Summary": "Awareness of reward and punishment; preparing for the hereafter.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Qiyamah",
+            "surah_number": 75,
+            "ayah_range": "1-15",
+            "text": "The Day of Resurrection."
+          },
+          {
+            "surah": "Surah Al-Mutaffifin",
+            "surah_number": 83,
+            "ayah_range": "1-6",
+            "text": "Warning against fraud."
+          },
+          "Also referenced in Section 6.1 and 6.3 (Ethics in Trade & Commerce)."
+        ]
+      },
+      "1.5 Knowledge & Reflection": {
+        "Summary": "Encouragement to seek knowledge, reflect on creation, and use intellect.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Alaq",
+            "surah_number": 96,
+            "ayah_range": "1-5",
+            "text": "The importance of reading and learning."
+          },
+          {
+            "surah": "Surah Az-Zumar",
+            "surah_number": 39,
+            "ayah_range": "9",
+            "text": "The value of knowledge."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "164",
+            "text": "Signs of Allah in creation."
+          }
+        ]
+      },
+      "1.6 Self-Control & Discipline": {
+        "Summary": "Controlling anger, desires, and practicing humility.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Imran",
+            "surah_number": 3,
+            "ayah_range": "134",
+            "text": "Controlling anger and forgiving others."
+          },
+          {
+            "surah": "Surah Al-Furqan",
+            "surah_number": 25,
+            "ayah_range": "63",
+            "text": "Walking with humility."
+          }
+        ]
+      },
+      "1.7 Repentance & Forgiveness": {
+        "Summary": "Seeking Allah’s mercy, returning to Him sincerely.",
+        "Examples": [
+          {
+            "surah": "Surah Az-Zumar",
+            "surah_number": 39,
+            "ayah_range": "53",
+            "text": "Allah's boundless mercy."
+          },
+          {
+            "surah": "Surah At-Tahrim",
+            "surah_number": 66,
+            "ayah_range": "8",
+            "text": "Sincere repentance."
+          }
+        ]
+      },
+      "1.8 Gratitude & Patience": {
+        "Summary": "Being thankful and enduring hardships patiently.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "152",
+            "text": "Remember Allah and be grateful."
+          },
+          {
+            "surah": "Surah Al-Asr",
+            "surah_number": 103,
+            "ayah_range": "1-3",
+            "text": "The importance of patience and faith."
+          }
+        ]
+      },
+      "1.9 Guidance in Daily Life": {
+        "Summary": "Ethical behavior, respect, and moral decision-making.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Isra",
+            "surah_number": 17,
+            "ayah_range": "23-24",
+            "text": "Worship Allah and be good to parents."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "2-3",
+            "text": "Guidance for the righteous."
+          },
+          "See also: Section 1.1 Faith & Belief."
+        ]
+      }
+    },
+    "2. Social / Community Solutions (Ummah)": {
+      "2.1 Justice & Governance": {
+        "Summary": "Upholding fairness, preventing corruption, and ensuring justice.",
+        "Examples": [
+          {
+            "surah": "Surah An-Nisa",
+            "surah_number": 4,
+            "ayah_range": "58",
+            "text": "Justice and returning trusts."
+          },
+          {
+            "surah": "Surah Al-Ma’idah",
+            "surah_number": 5,
+            "ayah_range": "42",
+            "text": "Judging with justice."
+          }
+        ]
+      },
+      "2.2 Consultation & Decision-Making (Shura)": {
+        "Summary": "Encouragement for collective consultation in leadership and community matters.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Imran",
+            "surah_number": 3,
+            "ayah_range": "159",
+            "text": "The importance of consultation."
+          },
+          {
+            "surah": "Surah Ash-Shura",
+            "surah_number": 42,
+            "ayah_range": "38",
+            "text": "Conducting affairs by consultation."
+          }
+        ]
+      },
+      "2.3 Social Welfare & Charity": {
+        "Summary": "Aid to the needy, orphans, and community support.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "177",
+            "text": "Righteousness and charity."
+          },
+          {
+            "surah": "Surah Al-Ma’un",
+            "surah_number": 107,
+            "ayah_range": "1-7",
+            "text": "Helping the needy."
+          }
+        ]
+      },
+      "2.4 Economic & Financial Ethics": {
+        "Summary": "Fair trade, honest business practices, avoiding exploitation.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "275-280",
+            "text": "Prohibition of interest (riba)."
+          },
+          {
+            "surah": "Surah Al-An’am",
+            "surah_number": 6,
+            "ayah_range": "141",
+            "text": "Avoid wastefulness and exploitation."
+          },
+          {
+            "surah": "Surah Al-Mutaffifin",
+            "surah_number": 83,
+            "ayah_range": "1-3",
+            "text": "Warning against fraud."
+          },
+          "See also Section 6.1 & 6.3."
+        ]
+      },
+      "2.5 Family & Relationships": {
+        "Summary": "Marriage, inheritance, parent-child relationships, and responsibilities.",
+        "Examples": [
+          {
+            "surah": "Surah An-Nisa",
+            "surah_number": 4,
+            "ayah_range": "1-3",
+            "text": "Marriage and family life."
+          },
+          {
+            "surah": "Surah Al-Talaq",
+            "surah_number": 65,
+            "ayah_range": "1-7",
+            "text": "Divorce and family protection."
+          }
+        ]
+      },
+      "2.6 Unity & Brotherhood": {
+        "Summary": "Promoting community cohesion, avoiding divisions.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Hujurat",
+            "surah_number": 49,
+            "ayah_range": "10",
+            "text": "Brotherhood of believers."
+          },
+          {
+            "surah": "Surah Al-Imran",
+            "surah_number": 3,
+            "ayah_range": "103",
+            "text": "Holding fast to the rope of Allah."
+          }
+        ]
+      },
+      "2.7 Conflict Resolution & Diplomacy": {
+        "Summary": "Ethical conduct in conflict and pursuit of peace.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Anfal",
+            "surah_number": 8,
+            "ayah_range": "61-62",
+            "text": "Inclining towards peace."
+          },
+          {
+            "surah": "Surah Al-Hujurat",
+            "surah_number": 49,
+            "ayah_range": "9",
+            "text": "Reconciliation between believers."
+          }
+        ]
+      },
+      "2.8 Education & Knowledge Dissemination": {
+        "Summary": "Promoting collective learning and spreading knowledge ethically.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Alaq",
+            "surah_number": 96,
+            "ayah_range": "1-5",
+            "text": "The importance of reading and learning."
+          },
+          {
+            "surah": "Surah Al-Mujadila",
+            "surah_number": 58,
+            "ayah_range": "11",
+            "text": "Making space for others and seeking knowledge."
+          }
+        ]
+      },
+      "2.9 Environmental & Resource Management": {
+        "Summary": "Stewardship of nature and sustainability.",
+        "Examples": [
+          {
+            "surah": "Surah Al-An’am",
+            "surah_number": 6,
+            "ayah_range": "141",
+            "text": "Avoiding wastefulness."
+          },
+          {
+            "surah": "Surah Ar-Rum",
+            "surah_number": 30,
+            "ayah_range": "41",
+            "text": "Corruption in the land and sea."
+          }
+        ]
+      }
+    },
+    "3. Practical Life Solutions": {
+      "3.1 Health & Hygiene": {
+        "Summary": "Cleanliness, lawful foods, and wellbeing.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "168-173",
+            "text": "Eating lawful and good food."
+          },
+          {
+            "surah": "Surah Al-Ma’idah",
+            "surah_number": 5,
+            "ayah_range": "3",
+            "text": "Prohibited foods."
+          }
+        ]
+      },
+      "3.2 Time & Productivity": {
+        "Summary": "Value of time, discipline, and productive effort.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Asr",
+            "surah_number": 103,
+            "ayah_range": "1-3",
+            "text": "The importance of time."
+          },
+          {
+            "surah": "Surah Al-Muzzammil",
+            "surah_number": 73,
+            "ayah_range": "1-10",
+            "text": "Standing in prayer at night."
+          }
+        ]
+      },
+      "3.3 Work & Productivity": {
+        "Summary": "Honest labor and ethical trade.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Jumu’ah",
+            "surah_number": 62,
+            "ayah_range": "10",
+            "text": "Balance between worship and work."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "267",
+            "text": "Spending from the good things you have earned."
+          }
+        ]
+      },
+      "3.4 Family & Parenting": {
+        "Summary": "Ethical upbringing, guidance, and protection of children.",
+        "Examples": [
+          {
+            "surah": "Surah Luqman",
+            "surah_number": 31,
+            "ayah_range": "13-19",
+            "text": "Luqman's advice to his son."
+          },
+          {
+            "surah": "Surah At-Tahrim",
+            "surah_number": 66,
+            "ayah_range": "6",
+            "text": "Protecting yourselves and your families from the Fire."
+          }
+        ]
+      },
+      "3.5 Safety & Security": {
+        "Summary": "Personal and community protection.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Imran",
+            "surah_number": 3,
+            "ayah_range": "102-103",
+            "text": "Holding fast to the rope of Allah."
+          },
+          {
+            "surah": "Surah Al-Anfal",
+            "surah_number": 8,
+            "ayah_range": "60",
+            "text": "Preparing for defense."
+          }
+        ]
+      },
+      "3.6 Mental & Emotional Health": {
+        "Summary": "Coping strategies for grief, fear, and stress.",
+        "Examples": [
+          {
+            "surah": "Surah Ash-Sharh",
+            "surah_number": 94,
+            "ayah_range": "5-6",
+            "text": "Ease after hardship."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "155-157",
+            "text": "Patience in times of trial."
+          }
+        ]
+      }
+    },
+    "4. Knowledge & Understanding": {
+      "4.1 Science & Nature": {
+        "Summary": "Reflecting on nature to recognize God's signs.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Ghashiyah",
+            "surah_number": 88,
+            "ayah_range": "17-20",
+            "text": "Reflecting on the creation."
+          },
+          {
+            "surah": "Surah Al-Mulk",
+            "surah_number": 67,
+            "ayah_range": "3-5",
+            "text": "Perfection in creation."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "164",
+            "text": "Signs of Allah in the universe."
+          }
+        ]
+      },
+      "4.2 History & Lessons": {
+        "Summary": "Learning from past communities and prophets’ experiences.",
+        "Examples": [
+          {
+            "surah": "Surah Yusuf",
+            "surah_number": 12,
+            "ayah_range": "1-101",
+            "text": "The story of Prophet Yusuf."
+          },
+          {
+            "surah": "Surah Al-Qasas",
+            "surah_number": 28,
+            "ayah_range": "1-28",
+            "text": "The story of Prophet Musa."
+          }
+        ]
+      },
+      "4.3 Critical Thinking & Reasoning": {
+        "Summary": "Using intellect and observation to discern truth.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "164",
+            "text": "Using reason to understand Allah's signs."
+          },
+          {
+            "surah": "Surah Al-An’am",
+            "surah_number": 6,
+            "ayah_range": "50-54",
+            "text": "Following revelation, not conjecture."
+          }
+        ]
+      },
+      "4.4 Prophetic History & Role Models": {
+        "Summary": "Learning moral and spiritual lessons from prophets.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Anbiya",
+            "surah_number": 21,
+            "ayah_range": "1-112",
+            "text": "Stories of the prophets."
+          },
+          {
+            "surah": "Surah Yusuf",
+            "surah_number": 12,
+            "ayah_range": "1-101",
+            "text": "Lessons from the life of Prophet Yusuf."
+          }
+        ]
+      },
+      "4.5 Language, Communication & Persuasion": {
+        "Summary": "Ethical speech and inviting others with wisdom.",
+        "Examples": [
+          {
+            "surah": "Surah An-Nahl",
+            "surah_number": 16,
+            "ayah_range": "125",
+            "text": "Inviting to Allah with wisdom."
+          },
+          {
+            "surah": "Surah Al-Ahzab",
+            "surah_number": 33,
+            "ayah_range": "70-71",
+            "text": "Speaking truthfully."
+          }
+        ]
+      }
+    },
+    "5. Leadership & Governance": {
+      "5.1 Ethical Leadership": {
+        "Summary": "Integrity and honesty in leadership roles.",
+        "Examples": [
+          {
+            "surah": "Surah Sad",
+            "surah_number": 38,
+            "ayah_range": "26",
+            "text": "Just rulership."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "247",
+            "text": "Trust and competence in leadership."
+          }
+        ]
+      },
+      "5.2 Justice & Fair Rule": {
+        "Summary": "Ensuring justice in governance.",
+        "Examples": [
+          {
+            "surah": "Surah An-Nisa",
+            "surah_number": 4,
+            "ayah_range": "58",
+            "text": "Upholding justice."
+          },
+          {
+            "surah": "Surah Al-Ma’idah",
+            "surah_number": 5,
+            "ayah_range": "8",
+            "text": "Stand for justice."
+          }
+        ]
+      },
+      "5.3 Consultation & Shura": {
+        "Summary": "Collective decision-making.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Imran",
+            "surah_number": 3,
+            "ayah_range": "159",
+            "text": "The importance of consultation."
+          },
+          {
+            "surah": "Surah Ash-Shura",
+            "surah_number": 42,
+            "ayah_range": "38",
+            "text": "Conducting affairs by consultation."
+          }
+        ]
+      }
+    },
+    "6. Economics & Trade": {
+      "6.1 Ethical Commerce": {
+        "Summary": "Honesty, transparency, and contracts in business.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "282",
+            "text": "Written contracts."
+          },
+          {
+            "surah": "Surah Al-Mutaffifin",
+            "surah_number": 83,
+            "ayah_range": "1-3",
+            "text": "Warning against fraud."
+          }
+        ]
+      },
+      "6.2 Charity & Redistribution": {
+        "Summary": "Equitable wealth distribution and supporting those in need.",
+        "Examples": [
+          {
+            "surah": "Surah At-Tawbah",
+            "surah_number": 9,
+            "ayah_range": "60",
+            "text": "Specified recipients for charity."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "177",
+            "text": "Righteousness and charity."
+          }
+        ]
+      },
+      "6.3 Prohibition of Exploitation": {
+        "Summary": "Avoiding unjust gain, interest (riba), and hoarding.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "275-280",
+            "text": "Prohibition of riba."
+          },
+          {
+            "surah": "Surah Al-Imran",
+            "surah_number": 3,
+            "ayah_range": "130",
+            "text": "Avoid exploitation."
+          }
+        ]
+      }
+    },
+    "7. Environmental & Resource Management": {
+      "7.1 Stewardship of Earth": {
+        "Summary": "Humans as caretakers promoting balance.",
+        "Examples": [
+          {
+            "surah": "Surah Al-An’am",
+            "surah_number": 6,
+            "ayah_range": "141",
+            "text": "Avoiding wastefulness."
+          },
+          {
+            "surah": "Surah Ar-Rum",
+            "surah_number": 30,
+            "ayah_range": "41",
+            "text": "Corruption in the land and sea."
+          }
+        ]
+      },
+      "7.2 Sustainable Agriculture & Food": {
+        "Summary": "Ethical consumption and responsible agriculture.",
+        "Examples": [
+          {
+            "surah": "Surah Al-An’am",
+            "surah_number": 6,
+            "ayah_range": "141",
+            "text": "Avoiding wastefulness."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "261",
+            "text": "Productive charity as reward."
+          }
+        ]
+      },
+      "7.3 Animal Ethics & Ecosystem": {
+        "Summary": "Compassion for animals and ecological balance.",
+        "Examples": [
+          {
+            "surah": "Surah Al-An’am",
+            "surah_number": 6,
+            "ayah_range": "38",
+            "text": "All creatures are communities like humans."
+          },
+          {
+            "surah": "Surah Al-Muminun",
+            "surah_number": 23,
+            "ayah_range": "18-21",
+            "text": "Livestock and sustenance."
+          }
+        ]
+      }
+    },
+    "8. Interpersonal & Interfaith Guidance": {
+      "8.1 Respect & Brotherhood": {
+        "Summary": "Ethical conduct, avoiding mockery, and maintaining unity.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Hujurat",
+            "surah_number": 49,
+            "ayah_range": "11-12",
+            "text": "Avoiding mockery and suspicion."
+          },
+          {
+            "surah": "Surah Al-Imran",
+            "surah_number": 3,
+            "ayah_range": "103",
+            "text": "Holding fast to the rope of Allah."
+          }
+        ]
+      },
+      "8.2 Ethical Interaction with Non-Muslims": {
+        "Summary": "Justice, kindness, and peaceful coexistence.",
+        "Examples": [
+          {
+            "surah": "Surah Al-Mumtahanah",
+            "surah_number": 60,
+            "ayah_range": "8-9",
+            "text": "Justice and kindness to non-Muslims."
+          },
+          {
+            "surah": "Surah Al-Baqarah",
+            "surah_number": 2,
+            "ayah_range": "256",
+            "text": "No compulsion in religion."
+          }
+        ]
+      },
+      "8.3 Family & Social Ethics": {
+        "Summary": "Marriage, child-rearing, and social responsibility.",
+        "Examples": [
+          {
+            "surah": "Surah An-Nisa",
+            "surah_number": 4,
+            "ayah_range": "1-35",
+            "text": "Marriage and family life."
+          },
+          {
+            "surah": "Surah Al-Talaq",
+            "surah_number": 65,
+            "ayah_range": "1-7",
+            "text": "Divorce and family protection."
+          }
+        ]
+      }
+    }
+  }
+}
