@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Simulation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+        
+        #canvas {
+            display: block;
+            background: radial-gradient(circle at center, #001122, #000000);
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        input[type="range"] {
+            width: 200px;
+            margin-bottom: 5px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b35, #ff8e53);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        .value-display {
+            color: #ff8e53;
+            font-weight: bold;
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 250px;
+        }
+        
+        .time-display {
+            font-size: 18px;
+            color: #ff8e53;
+            margin-bottom: 10px;
+        }
+        
+        .planet-count {
+            font-size: 14px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="controls">
+        <h3 style="margin-top: 0; color: #ff8e53;">Solar System Controls</h3>
+        
+        <div class="control-group">
+            <label>Orbital Speed: <span class="value-display" id="speedValue">1.0</span></label>
+            <input type="range" id="orbitalSpeed" min="0" max="5" step="0.1" value="0.2">
+        </div>
+        
+        <div class="control-group">
+            <label>Planet Size: <span class="value-display" id="sizeValue">1.0</span></label>
+            <input type="range" id="planetSize" min="0.5" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="control-group">
+            <label>Show Orbits: <span class="value-display" id="orbitValue">On</span></label>
+            <input type="range" id="showOrbits" min="0" max="1" step="1" value="1">
+        </div>
+        
+        <div class="control-group">
+            <label>Asteroid Belt: <span class="value-display" id="asteroidValue">On</span></label>
+            <input type="range" id="asteroidBelt" min="0" max="1" step="1" value="1">
+        </div>
+        
+        <button onclick="resetSimulation()">Reset System</button>
+        <button onclick="togglePause()" id="pauseBtn">Pause</button>
+    </div>
+    
+    <div class="info-panel">
+        <div class="time-display" id="timeDisplay">Earth Days: 0</div>
+        <div class="planet-count" id="planetCountDisplay">Bodies: 9</div>
+        <div style="font-size: 12px; color: #888; margin-top: 10px;">
+            Simulating orbital mechanics and planetary motion
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let planets = [];
+        let asteroids = [];
+        let time = 0;
+        let isPaused = false;
+        let animationId;
+        
+        // Control elements
+        const orbitalSpeedSlider = document.getElementById('orbitalSpeed');
+        const planetSizeSlider = document.getElementById('planetSize');
+        const showOrbitsSlider = document.getElementById('showOrbits');
+        const asteroidBeltSlider = document.getElementById('asteroidBelt');
+        
+        // Configuration
+        let config = {
+            orbitalSpeed: 0.2,
+            planetSize: 1.0,
+            showOrbits: true,
+            asteroidBelt: true
+        };
+        
+        // Planet data (simplified distances and sizes for visualization)
+        const planetData = [
+            { name: 'Sun', distance: 0, size: 30, color: '#FFD700', period: 0 },
+            { name: 'Mercury', distance: 80, size: 4, color: '#8C7853', period: 88 },
+            { name: 'Venus', distance: 110, size: 6, color: '#FFC649', period: 225 },
+            { name: 'Earth', distance: 150, size: 7, color: '#6B93D6', period: 365 },
+            { name: 'Mars', distance: 190, size: 5, color: '#CD5C5C', period: 687 },
+            { name: 'Jupiter', distance: 280, size: 20, color: '#D8CA9D', period: 4333 },
+            { name: 'Saturn', distance: 350, size: 17, color: '#FAD5A5', period: 10759 },
+            { name: 'Uranus', distance: 420, size: 12, color: '#4FD0E4', period: 30687 },
+            { name: 'Neptune', distance: 480, size: 11, color: '#4B70DD', period: 60190 }
+        ];
+        
+        class Planet {
+            constructor(data) {
+                this.name = data.name;
+                this.distance = data.distance;
+                this.size = data.size;
+                this.color = data.color;
+                this.period = data.period;
+                this.angle = Math.random() * Math.PI * 2; // Random starting position
+                this.x = 0;
+                this.y = 0;
+
+            }
+            
+            update() {
+                if (this.period > 0) {
+                    // Calculate angular velocity (much slower for realistic motion)
+                    const angularVelocity = (2 * Math.PI) / (this.period * 1) * config.orbitalSpeed;
+                    this.angle += angularVelocity;
+                }
+                
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                
+                this.x = centerX + Math.cos(this.angle) * this.distance;
+                this.y = centerY + Math.sin(this.angle) * this.distance;
+
+            }
+            
+            draw() {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                
+                // Draw orbit path
+                if (config.showOrbits && this.distance > 0) {
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, this.distance, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                
+                // Draw planet
+                const displaySize = this.size * config.planetSize;
+                
+                if (this.name === 'Sun') {
+                    // Draw sun with glow
+                    const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, displaySize * 2);
+                    gradient.addColorStop(0, this.color);
+                    gradient.addColorStop(0.7, this.color + '80');
+                    gradient.addColorStop(1, 'transparent');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, displaySize * 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Draw planet core
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, displaySize, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Add rings for Saturn
+                if (this.name === 'Saturn') {
+                    ctx.strokeStyle = this.color + '60';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, displaySize + 5, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, displaySize + 8, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                
+                // Draw planet label (only if not Sun)
+                if (this.name !== 'Sun') {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(this.name, this.x, this.y - displaySize - 10);
+                }
+            }
+        }
+        
+        class Asteroid {
+            constructor() {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                
+                this.distance = 230 + (Math.random() - 0.5) * 40; // Between Mars and Jupiter
+                this.angle = Math.random() * Math.PI * 2;
+                this.size = Math.random() * 2 + 0.5;
+                this.color = '#8B7D6B';
+                this.period = 1500 + Math.random() * 1000; // Varied orbital periods
+                this.x = 0;
+                this.y = 0;
+            }
+            
+            update() {
+                const angularVelocity = (2 * Math.PI) / (this.period * 1) * config.orbitalSpeed;
+                this.angle += angularVelocity;
+                
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                
+                this.x = centerX + Math.cos(this.angle) * this.distance;
+                this.y = centerY + Math.sin(this.angle) * this.distance;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function createSolarSystem() {
+            planets = [];
+            asteroids = [];
+            
+            // Create planets
+            planetData.forEach(data => {
+                planets.push(new Planet(data));
+            });
+            
+            // Create asteroid belt
+            if (config.asteroidBelt) {
+                for (let i = 0; i < 50; i++) {
+                    asteroids.push(new Asteroid());
+                }
+            }
+        }
+        
+        function updateControls() {
+            document.getElementById('speedValue').textContent = orbitalSpeedSlider.value;
+            document.getElementById('sizeValue').textContent = planetSizeSlider.value;
+            document.getElementById('orbitValue').textContent = showOrbitsSlider.value == 1 ? 'On' : 'Off';
+            document.getElementById('asteroidValue').textContent = asteroidBeltSlider.value == 1 ? 'On' : 'Off';
+            
+            config.orbitalSpeed = parseFloat(orbitalSpeedSlider.value);
+            config.planetSize = parseFloat(planetSizeSlider.value);
+            config.showOrbits = showOrbitsSlider.value == 1;
+            config.asteroidBelt = asteroidBeltSlider.value == 1;
+        }
+        
+        function animate() {
+            if (!isPaused && !document.hidden) {
+                // Clear canvas completely
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw stars
+                ctx.fillStyle = '#fff';
+                for (let i = 0; i < 100; i++) {
+                    const x = (i * 123.456) % canvas.width;
+                    const y = (i * 789.123) % canvas.height;
+                    const brightness = Math.sin(time * 0.01 + i) * 0.5 + 0.5;
+                    ctx.globalAlpha = brightness * 0.3;
+                    ctx.fillRect(x, y, 1, 1);
+                }
+                ctx.globalAlpha = 1;
+                
+                // Update and draw asteroids
+                if (config.asteroidBelt) {
+                    asteroids.forEach(asteroid => {
+                        asteroid.update();
+                        asteroid.draw();
+                    });
+                }
+                
+                // Update and draw planets
+                planets.forEach(planet => {
+                    planet.update();
+                    planet.draw();
+                });
+                
+                time += 0.016;
+                
+                // Update info display
+                if (Math.floor(time * 10) % 6 === 0) {
+                    const earthDays = Math.floor(time * 10);
+                    document.getElementById('timeDisplay').textContent = `Earth Days: ${earthDays}`;
+                    const totalBodies = planets.length + (config.asteroidBelt ? asteroids.length : 0);
+                    document.getElementById('planetCountDisplay').textContent = `Bodies: ${totalBodies}`;
+                }
+            }
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        function resetSimulation() {
+            time = 0;
+            updateControls();
+            createSolarSystem();
+        }
+        
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('pauseBtn').textContent = isPaused ? 'Resume' : 'Pause';
+        }
+        
+        // Event listeners
+        [orbitalSpeedSlider, planetSizeSlider, showOrbitsSlider].forEach(slider => {
+            slider.addEventListener('input', updateControls);
+        });
+        
+        asteroidBeltSlider.addEventListener('change', () => {
+            updateControls();
+            createSolarSystem();
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            resetSimulation();
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                isPaused = true;
+                document.getElementById('pauseBtn').textContent = 'Resume';
+            }
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            planets.length = 0;
+            asteroids.length = 0;
+        });
+        
+        // Initialize
+        updateControls();
+        createSolarSystem();
+        animate();
+    </script>
+</body>
+</html>

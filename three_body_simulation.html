@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Three Body Problem Simulation</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background: #000;
+				color: #fff;
+				font-family: "Arial", sans-serif;
+				overflow: hidden;
+			}
+
+			#canvas {
+				display: block;
+				background: radial-gradient(circle at center, #001122, #000000);
+			}
+
+			.controls {
+				position: absolute;
+				top: 20px;
+				left: 20px;
+				background: rgba(0, 0, 0, 0.8);
+				padding: 20px;
+				border-radius: 10px;
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				z-index: 100;
+			}
+
+			.control-group {
+				margin-bottom: 15px;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 5px;
+				font-size: 14px;
+				color: #ccc;
+			}
+
+			input[type="range"] {
+				width: 200px;
+				margin-bottom: 5px;
+			}
+
+			button {
+				background: linear-gradient(45deg, #ff6b35, #ff8e53);
+				border: none;
+				color: white;
+				padding: 10px 20px;
+				border-radius: 5px;
+				cursor: pointer;
+				margin-right: 10px;
+				margin-bottom: 10px;
+				transition: all 0.3s ease;
+			}
+
+			button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+			}
+
+			.value-display {
+				color: #ff8e53;
+				font-weight: bold;
+			}
+
+			.info-panel {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				background: rgba(0, 0, 0, 0.8);
+				padding: 15px;
+				border-radius: 10px;
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				max-width: 250px;
+			}
+
+			.time-display {
+				font-size: 18px;
+				color: #ff8e53;
+				margin-bottom: 10px;
+			}
+
+			.body-count {
+				font-size: 14px;
+				color: #ccc;
+			}
+
+			.energy-display {
+				font-size: 12px;
+				color: #88dd88;
+				margin-top: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+
+		<div class="controls">
+			<h3 style="margin-top: 0; color: #ff8e53">Three Body Problem</h3>
+
+			<div class="control-group">
+				<label
+					>Simulation Speed:
+					<span
+						class="value-display"
+						id="speedValue"
+						>1.0</span
+					></label
+				>
+				<input
+					type="range"
+					id="simulationSpeed"
+					min="0.1"
+					max="5"
+					step="0.1"
+					value="2"
+				/>
+			</div>
+
+			<div class="control-group">
+				<label
+					>Gravitational Constant:
+					<span
+						class="value-display"
+						id="gravityValue"
+						>1.0</span
+					></label
+				>
+				<input
+					type="range"
+					id="gravity"
+					min="0.1"
+					max="3"
+					step="0.1"
+					value="1"
+				/>
+			</div>
+
+			<div class="control-group">
+				<label
+					>Show Trails:
+					<span
+						class="value-display"
+						id="trailValue"
+						>On</span
+					></label
+				>
+				<input
+					type="range"
+					id="showTrails"
+					min="0"
+					max="1"
+					step="1"
+					value="1"
+				/>
+			</div>
+
+			<div class="control-group">
+				<label
+					>Trail Length:
+					<span
+						class="value-display"
+						id="trailLengthValue"
+						>200</span
+					></label
+				>
+				<input
+					type="range"
+					id="trailLength"
+					min="50"
+					max="500"
+					step="25"
+					value="200"
+				/>
+			</div>
+
+			<button onclick="resetSimulation()">Reset System</button>
+			<button
+				onclick="togglePause()"
+				id="pauseBtn"
+			>
+				Pause
+			</button>
+			<button onclick="randomizeSystem()">Randomize</button>
+		</div>
+
+		<div class="info-panel">
+			<div
+				class="time-display"
+				id="timeDisplay"
+			>
+				Time: 0.00s
+			</div>
+			<div
+				class="body-count"
+				id="bodyCountDisplay"
+			>
+				Bodies: 3
+			</div>
+			<div
+				class="energy-display"
+				id="energyDisplay"
+			>
+				Total Energy: 0
+			</div>
+			<div style="font-size: 12px; color: #888; margin-top: 10px">
+				Simulating chaotic gravitational dynamics
+			</div>
+		</div>
+
+		<script>
+			const canvas = document.getElementById("canvas");
+			const ctx = canvas.getContext("2d");
+
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+
+			let bodies = [];
+			let time = 0;
+			let isPaused = false;
+			let animationId;
+
+			// Control elements
+			const simulationSpeedSlider = document.getElementById("simulationSpeed");
+			const gravitySlider = document.getElementById("gravity");
+			const showTrailsSlider = document.getElementById("showTrails");
+			const trailLengthSlider = document.getElementById("trailLength");
+
+			// Configuration
+			let config = {
+				simulationSpeed: 2.0,
+				gravity: 1.0,
+				showTrails: true,
+				trailLength: 200,
+			};
+
+			class Body {
+				constructor(x, y, vx, vy, mass, color, name) {
+					this.x = x;
+					this.y = y;
+					this.vx = vx;
+					this.vy = vy;
+					this.mass = mass;
+					this.color = color;
+					this.name = name;
+					this.radius = Math.sqrt(mass) * 8;
+					this.trail = [];
+					this.fx = 0;
+					this.fy = 0;
+				}
+
+				update(dt) {
+					// Reset forces
+					this.fx = 0;
+					this.fy = 0;
+
+					// Calculate gravitational forces from other bodies
+					bodies.forEach((other) => {
+						if (other !== this) {
+							const dx = other.x - this.x;
+							const dy = other.y - this.y;
+							const distance = Math.sqrt(dx * dx + dy * dy);
+
+							// Prevent division by zero and unrealistic forces
+							if (distance > this.radius + other.radius) {
+								const force =
+									(config.gravity * this.mass * other.mass) /
+									(distance * distance);
+								const fx = (force * dx) / distance;
+								const fy = (force * dy) / distance;
+
+								this.fx += fx;
+								this.fy += fy;
+							}
+						}
+					});
+
+					// Update velocity (F = ma, so a = F/m)
+					const ax = this.fx / this.mass;
+					const ay = this.fy / this.mass;
+
+					this.vx += ax * dt;
+					this.vy += ay * dt;
+
+					// Update position
+					this.x += this.vx * dt;
+					this.y += this.vy * dt;
+
+					// Update trail
+					if (config.showTrails) {
+						this.trail.push({ x: this.x, y: this.y });
+						while (this.trail.length > config.trailLength) {
+							this.trail.shift();
+						}
+					}
+				}
+
+				draw() {
+					// Draw trail
+					if (config.showTrails && this.trail.length > 1) {
+						ctx.strokeStyle = this.color + "60";
+						ctx.lineWidth = 2;
+						ctx.beginPath();
+						ctx.moveTo(this.trail[0].x, this.trail[0].y);
+						for (let i = 1; i < this.trail.length; i++) {
+							const alpha = i / this.trail.length;
+							ctx.globalAlpha = alpha * 0.6;
+							ctx.lineTo(this.trail[i].x, this.trail[i].y);
+						}
+						ctx.stroke();
+						ctx.globalAlpha = 1;
+					}
+
+					// Draw body with glow effect
+					const gradient = ctx.createRadialGradient(
+						this.x,
+						this.y,
+						0,
+						this.x,
+						this.y,
+						this.radius * 2
+					);
+					gradient.addColorStop(0, this.color);
+					gradient.addColorStop(0.7, this.color + "80");
+					gradient.addColorStop(1, "transparent");
+
+					ctx.fillStyle = gradient;
+					ctx.beginPath();
+					ctx.arc(this.x, this.y, this.radius * 2, 0, Math.PI * 2);
+					ctx.fill();
+
+					// Draw body core
+					ctx.fillStyle = this.color;
+					ctx.beginPath();
+					ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+					ctx.fill();
+
+					// Draw body label
+					ctx.fillStyle = "#fff";
+					ctx.font = "14px Arial";
+					ctx.textAlign = "center";
+					ctx.fillText(this.name, this.x, this.y - this.radius - 15);
+				}
+
+				getKineticEnergy() {
+					return 0.5 * this.mass * (this.vx * this.vx + this.vy * this.vy);
+				}
+			}
+
+			function createThreeBodySystem() {
+				bodies = [];
+				const centerX = canvas.width / 2;
+				const centerY = canvas.height / 2;
+
+				// Create a classic figure-8 configuration (simplified)
+				bodies.push(
+					new Body(centerX - 100, centerY, 0, -0.5, 50, "#FF6B6B", "Alpha")
+				);
+
+				bodies.push(
+					new Body(centerX + 100, centerY, 0, 0.5, 50, "#4ECDC4", "Beta")
+				);
+
+				bodies.push(
+					new Body(centerX, centerY - 100, 1, 0, 50, "#45B7D1", "Gamma")
+				);
+			}
+
+			function randomizeSystem() {
+				bodies = [];
+				const centerX = canvas.width / 2;
+				const centerY = canvas.height / 2;
+				const colors = ["#FF6B6B", "#4ECDC4", "#45B7D1"];
+				const names = ["Alpha", "Beta", "Gamma"];
+
+				for (let i = 0; i < 3; i++) {
+					const angle = (i / 3) * Math.PI * 2;
+					const radius = 80 + Math.random() * 120;
+					const x = centerX + Math.cos(angle) * radius;
+					const y = centerY + Math.sin(angle) * radius;
+
+					const vx = (Math.random() - 0.5) * 2;
+					const vy = (Math.random() - 0.5) * 2;
+					const mass = 30 + Math.random() * 40;
+
+					bodies.push(new Body(x, y, vx, vy, mass, colors[i], names[i]));
+				}
+			}
+
+			function calculateTotalEnergy() {
+				let totalKinetic = 0;
+				let totalPotential = 0;
+
+				// Calculate kinetic energy
+				bodies.forEach((body) => {
+					totalKinetic += body.getKineticEnergy();
+				});
+
+				// Calculate potential energy
+				for (let i = 0; i < bodies.length; i++) {
+					for (let j = i + 1; j < bodies.length; j++) {
+						const dx = bodies[j].x - bodies[i].x;
+						const dy = bodies[j].y - bodies[i].y;
+						const distance = Math.sqrt(dx * dx + dy * dy);
+
+						if (distance > 0) {
+							totalPotential -=
+								(config.gravity * bodies[i].mass * bodies[j].mass) / distance;
+						}
+					}
+				}
+
+				return totalKinetic + totalPotential;
+			}
+
+			function updateControls() {
+				document.getElementById("speedValue").textContent =
+					simulationSpeedSlider.value;
+				document.getElementById("gravityValue").textContent =
+					gravitySlider.value;
+				document.getElementById("trailValue").textContent =
+					showTrailsSlider.value == 1 ? "On" : "Off";
+				document.getElementById("trailLengthValue").textContent =
+					trailLengthSlider.value;
+
+				config.simulationSpeed = parseFloat(simulationSpeedSlider.value);
+				config.gravity = parseFloat(gravitySlider.value);
+				config.showTrails = showTrailsSlider.value == 1;
+				config.trailLength = parseInt(trailLengthSlider.value);
+			}
+
+			function animate() {
+				if (!isPaused && !document.hidden) {
+					// Clear canvas completely
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+					// Draw stars
+					ctx.fillStyle = "#fff";
+					for (let i = 0; i < 100; i++) {
+						const x = (i * 123.456) % canvas.width;
+						const y = (i * 789.123) % canvas.height;
+						const brightness = Math.sin(time * 0.01 + i) * 0.5 + 0.5;
+						ctx.globalAlpha = brightness * 0.3;
+						ctx.fillRect(x, y, 1, 1);
+					}
+					ctx.globalAlpha = 1;
+
+					// Update physics
+					const dt = 0.016 * (config.simulationSpeed * 100); // 60 FPS adjusted by speed
+					bodies.forEach((body) => {
+						body.update(dt);
+					});
+
+					// Draw bodies
+					bodies.forEach((body) => {
+						body.draw();
+					});
+
+					time += dt;
+
+					// Update info display
+					if (Math.floor(time * 10) % 6 === 0) {
+						document.getElementById(
+							"timeDisplay"
+						).textContent = `Time: ${time.toFixed(2)}s`;
+						document.getElementById(
+							"bodyCountDisplay"
+						).textContent = `Bodies: ${bodies.length}`;
+						const totalEnergy = calculateTotalEnergy();
+						document.getElementById(
+							"energyDisplay"
+						).textContent = `Total Energy: ${totalEnergy.toFixed(1)}`;
+					}
+				}
+
+				animationId = requestAnimationFrame(animate);
+			}
+
+			function resetSimulation() {
+				time = 0;
+				updateControls();
+				createThreeBodySystem();
+			}
+
+			function togglePause() {
+				isPaused = !isPaused;
+				document.getElementById("pauseBtn").textContent = isPaused
+					? "Resume"
+					: "Pause";
+			}
+
+			// Event listeners
+			[
+				simulationSpeedSlider,
+				gravitySlider,
+				showTrailsSlider,
+				trailLengthSlider,
+			].forEach((slider) => {
+				slider.addEventListener("input", updateControls);
+			});
+
+			// Handle window resize
+			window.addEventListener("resize", () => {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+				resetSimulation();
+			});
+
+			// Handle page visibility changes
+			document.addEventListener("visibilitychange", () => {
+				if (document.hidden) {
+					isPaused = true;
+					document.getElementById("pauseBtn").textContent = "Resume";
+				}
+			});
+
+			// Cleanup on page unload
+			window.addEventListener("beforeunload", () => {
+				if (animationId) {
+					cancelAnimationFrame(animationId);
+				}
+				bodies.length = 0;
+			});
+
+			// Initialize
+			updateControls();
+			createThreeBodySystem();
+			animate();
+		</script>
+	</body>
+</html>

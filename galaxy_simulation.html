@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Galaxy Simulation</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background: #000;
+				color: #fff;
+				font-family: "Arial", sans-serif;
+				overflow: hidden;
+			}
+
+			#canvas {
+				display: block;
+				background: radial-gradient(circle at center, #001122, #000000);
+			}
+
+			.controls {
+				position: absolute;
+				top: 20px;
+				left: 20px;
+				background: rgba(0, 0, 0, 0.8);
+				padding: 20px;
+				border-radius: 10px;
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				z-index: 100;
+			}
+
+			.control-group {
+				margin-bottom: 15px;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 5px;
+				font-size: 14px;
+				color: #ccc;
+			}
+
+			input[type="range"] {
+				width: 200px;
+				margin-bottom: 5px;
+			}
+
+			button {
+				background: linear-gradient(45deg, #ff6b35, #ff8e53);
+				border: none;
+				color: white;
+				padding: 10px 20px;
+				border-radius: 5px;
+				cursor: pointer;
+				margin-right: 10px;
+				margin-bottom: 10px;
+				transition: all 0.3s ease;
+			}
+
+			button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+			}
+
+			.value-display {
+				color: #ff8e53;
+				font-weight: bold;
+			}
+
+			.info-panel {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				background: rgba(0, 0, 0, 0.8);
+				padding: 15px;
+				border-radius: 10px;
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				max-width: 250px;
+			}
+
+			.time-display {
+				font-size: 18px;
+				color: #ff8e53;
+				margin-bottom: 10px;
+			}
+
+			.planet-count {
+				font-size: 14px;
+				color: #ccc;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+
+		<div class="controls">
+			<h3 style="margin-top: 0; color: #ff8e53">Galaxy Controls</h3>
+
+			<div class="control-group">
+				<label
+					>Orbital Speed:
+					<span
+						class="value-display"
+						id="speedValue"
+						>0.2</span
+					></label
+				>
+				<input
+					type="range"
+					id="orbitalSpeed"
+					min="0"
+					max="5"
+					step="0.1"
+					value="0.2"
+				/>
+			</div>
+
+			<div class="control-group">
+				<label
+					>Star Size:
+					<span
+						class="value-display"
+						id="sizeValue"
+						>1.0</span
+					></label
+				>
+				<input
+					type="range"
+					id="planetSize"
+					min="0.5"
+					max="3"
+					step="0.1"
+					value="1"
+				/>
+			</div>
+
+			<div class="control-group">
+				<label
+					>Show Arms:
+					<span
+						class="value-display"
+						id="orbitValue"
+						>On</span
+					></label
+				>
+				<input
+					type="range"
+					id="showOrbits"
+					min="0"
+					max="1"
+					step="1"
+					value="1"
+				/>
+			</div>
+
+			<div class="control-group">
+				<label
+					>Dust Clouds:
+					<span
+						class="value-display"
+						id="asteroidValue"
+						>On</span
+					></label
+				>
+				<input
+					type="range"
+					id="asteroidBelt"
+					min="0"
+					max="1"
+					step="1"
+					value="1"
+				/>
+			</div>
+
+			<button onclick="resetSimulation()">Reset</button>
+			<button
+				onclick="togglePause()"
+				id="pauseBtn"
+			>
+				Pause
+			</button>
+		</div>
+
+		<div class="info-panel">
+			<div
+				class="time-display"
+				id="timeDisplay"
+			>
+				Myr: 0
+			</div>
+			<div
+				class="planet-count"
+				id="planetCountDisplay"
+			>
+				Particles: 0
+			</div>
+			<div style="font-size: 12px; color: #888; margin-top: 10px">
+				Spiral galaxy with rotation curve, density waves, and dust lanes
+			</div>
+		</div>
+
+		<script>
+			const canvas = document.getElementById("canvas");
+			const ctx = canvas.getContext("2d");
+
+			// HiDPI scaling
+			const dpr = Math.min(window.devicePixelRatio || 1, 2);
+			function resizeCanvas() {
+				const w = window.innerWidth;
+				const h = window.innerHeight;
+				canvas.style.width = w + "px";
+				canvas.style.height = h + "px";
+				canvas.width = Math.floor(w * dpr);
+				canvas.height = Math.floor(h * dpr);
+				ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			}
+			resizeCanvas();
+
+			// Globals
+			let stars = [];
+			let dust = [];
+			let isPaused = false;
+			let animationId;
+			let lastTime = performance.now();
+			let simMyr = 0;
+
+			// Controls
+			const orbitalSpeedSlider = document.getElementById("orbitalSpeed");
+			const planetSizeSlider = document.getElementById("planetSize");
+			const showOrbitsSlider = document.getElementById("showOrbits");
+			const asteroidBeltSlider = document.getElementById("asteroidBelt");
+
+			let config = {
+				orbitalSpeed: parseFloat(orbitalSpeedSlider.value) || 0.2,
+				starSize: parseFloat(planetSizeSlider.value) || 1.0,
+				showArms: showOrbitsSlider.value == 1,
+				showDust: asteroidBeltSlider.value == 1,
+			};
+
+			// Galaxy parameters
+			const GALAXY = {
+				arms: 4,
+				pitchDeg: 16, // pitch angle (typical 10-25 deg)
+				turns: 3.2,
+				bulgeFraction: 0.16,
+				baseMyrPerSecond: 5, // Myr per real second at speed=1
+				coreRadiusFrac: 0.18, // core scale for rotation curve
+				omegaMax: 1.1, // sets the flat rotation scale (rad/Myr)
+				patternSpeed: 0.18, // arm pattern speed (rad/Myr)
+				diskThicknessPx: 6, // base vertical scatter (px, at r=R)
+				bulgeThicknessPx: 12, // thicker bulge
+				epicycleEccMin: 0.02,
+				epicycleEccMax: 0.06,
+			};
+
+			// Precompute inclination and orientation (view)
+			const INCLINATION_DEG = 55; // tilt relative to face-on
+			const PA_DEG = -20; // position angle (rotation in the sky)
+			const cosi = Math.cos((INCLINATION_DEG * Math.PI) / 180);
+			const sini = Math.sin((INCLINATION_DEG * Math.PI) / 180);
+			const cosPA = Math.cos((PA_DEG * Math.PI) / 180);
+			const sinPA = Math.sin((PA_DEG * Math.PI) / 180);
+
+			// Utilities
+			function randn() {
+				let u = 0,
+					v = 0;
+				while (u === 0) u = Math.random();
+				while (v === 0) v = Math.random();
+				return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+			}
+			function clamp(v, a, b) {
+				return Math.max(a, Math.min(b, v));
+			}
+			function wrapPI(a) {
+				// wrap to [-PI, PI]
+				a = (a + Math.PI) % (2 * Math.PI);
+				return a < 0 ? a + 2 * Math.PI - Math.PI : a - Math.PI;
+			}
+
+			function galaxyCounts() {
+				const w = canvas.width / dpr;
+				const h = canvas.height / dpr;
+				const area = (w * h) / (1280 * 720);
+				const baseStars = 1800;
+				const baseDust = 1300;
+				const starsCount = Math.floor(
+					baseStars * Math.sqrt(Math.max(0.6, area))
+				);
+				const dustCount = Math.floor(baseDust * Math.sqrt(Math.max(0.6, area)));
+				return { starsCount, dustCount };
+			}
+
+			// Rotation curve: v(r) ~ flat at large r, solid-body at center
+			// We return Omega(r) = v/r (rad/Myr). rNorm in [0,1].
+			function rotationOmega(rNorm) {
+				const Rc = GALAXY.coreRadiusFrac;
+				const eps = 1e-3;
+				const vOverR = (1 - Math.exp(-rNorm / (Rc + 1e-6))) / (rNorm + eps);
+				return GALAXY.omegaMax * vOverR;
+			}
+
+			// Epicyclic frequency approximated
+			function epicycleKappa(omega) {
+				// For flat curves kappa ~ sqrt(2) * omega; this is a decent approximation.
+				return Math.SQRT2 * omega;
+			}
+
+			// Spiral density wave: returns proximity weight [0..1] to nearest arm ridge
+			function armWeight(rNorm, theta, tMyr) {
+				if (rNorm < 0.06) return 0;
+				const pitch = (GALAXY.pitchDeg * Math.PI) / 180;
+				const invTan = 1 / Math.tan(pitch); // log-spiral parameter
+				const Rref = 0.25; // reference radius for phase
+				const phase = GALAXY.patternSpeed * tMyr; // pattern rotates slowly
+				let best = 0;
+				for (let a = 0; a < GALAXY.arms; a++) {
+					const armPhase = (a / GALAXY.arms) * 2 * Math.PI + phase;
+					const thetaRidge =
+						armPhase + invTan * Math.log((rNorm + 1e-6) / Rref);
+					const dTheta = wrapPI(theta - thetaRidge);
+					const sigma = 0.05 + 0.11 * rNorm; // arms wider outside
+					const s = Math.abs(rNorm * dTheta);
+					const w = Math.exp(-0.5 * (s / sigma) * (s / sigma));
+					if (w > best) best = w;
+				}
+				return best;
+			}
+
+			function projectToScreen(cx, cy, x, y, z) {
+				// Rotate in plane by PA (position angle)
+				const xr = x * cosPA - y * sinPA;
+				const yr = x * sinPA + y * cosPA;
+				// Incline around x-axis
+				const yi = yr * cosi - z * sini;
+				const zi = yr * sini + z * cosi; // depth (for sorting)
+				return { sx: cx + xr, sy: cy + yi, depth: zi };
+			}
+
+			class Star {
+				constructor(cx, cy, R) {
+					this.cx = cx;
+					this.cy = cy;
+					// Decide bulge vs disk
+					const inBulge = Math.random() < GALAXY.bulgeFraction;
+					if (inBulge) {
+						// Bulge: concentrated, thicker, warmer, more isotropic
+						this.r0 = (Math.pow(Math.random(), 0.8) * 0.22 + 0.01) * R;
+						this.rNorm0 = this.r0 / R;
+						this.theta = Math.random() * Math.PI * 2;
+						this.omega =
+							rotationOmega(this.rNorm0) * (0.7 + Math.random() * 0.6); // broaden kinematics
+						this.e = Math.random() * 0.03;
+						this.phiE = Math.random() * Math.PI * 2;
+						this.z =
+							randn() * (GALAXY.bulgeThicknessPx * (0.5 + 0.5 * Math.random()));
+						const hue = 40 + Math.random() * 25; // warm
+						const sat = 55 + Math.random() * 25;
+						const light = 70 + Math.random() * 12;
+						this.color = { h: hue, s: sat, l: light };
+						this.baseAlpha = 0.6 + Math.random() * 0.4;
+						this.size = 0.8 + Math.random() * 1.5;
+					} else {
+						// Disk star near arms
+						// Sample radius roughly exponential disk with arm bias
+						const s = Math.random();
+						const rDisk = -Math.log(1 - s) * 0.35 * R; // exponential-ish
+						this.r0 = clamp(rDisk + randn() * 0.06 * R, 0.04 * R, 0.95 * R);
+						this.rNorm0 = this.r0 / R;
+
+						// Place near a spiral ridge (with small offset)
+						const pitch = (GALAXY.pitchDeg * Math.PI) / 180;
+						const invTan = 1 / Math.tan(pitch);
+						const armIndex = Math.floor(Math.random() * GALAXY.arms);
+						const armPhase = (armIndex / GALAXY.arms) * 2 * Math.PI;
+						const thetaRidge0 =
+							armPhase + invTan * Math.log((this.rNorm0 + 1e-6) / 0.25);
+						const sigma = 0.1 + 0.16 * this.rNorm0;
+						const offset = randn() * sigma; // angular offset in normalized units
+						this.theta = thetaRidge0 + offset; // initial theta
+						this.omega =
+							rotationOmega(this.rNorm0) * (0.97 + Math.random() * 0.06);
+
+						// Small epicyclic oscillation
+						this.e =
+							GALAXY.epicycleEccMin +
+							Math.random() * (GALAXY.epicycleEccMax - GALAXY.epicycleEccMin);
+						this.phiE = Math.random() * Math.PI * 2;
+						this.kappa = epicycleKappa(this.omega);
+
+						// Thin disk; a bit thicker in outer disk
+						const zSigma = GALAXY.diskThicknessPx * (0.6 + 0.8 * this.rNorm0);
+						this.z = randn() * zSigma * 0.6;
+
+						// Color: bluer outside
+						const blueBias = clamp((this.rNorm0 - 0.2) / 0.8, 0, 1);
+						const hue = 55 + (215 - 55) * blueBias;
+						const sat = 60 + 25 * Math.random();
+						const light = 70 + 8 * Math.random();
+						this.color = { h: hue, s: sat, l: light };
+						this.baseAlpha = 0.55 + Math.random() * 0.4;
+						this.size = 0.7 + Math.random() * 1.6;
+					}
+
+					// Positions
+					this.x = 0;
+					this.y = 0;
+					this.sx = 0;
+					this.sy = 0;
+					this.depth = 0;
+					this.armBoost = 0;
+					this.updatePosition(0);
+				}
+
+				update(dtMyr) {
+					const speed = config.orbitalSpeed;
+					this.theta += this.omega * dtMyr * speed;
+
+					if (this.kappa) {
+						this.phiE += this.kappa * dtMyr * speed;
+					}
+
+					this.updatePosition(dtMyr);
+				}
+
+				updatePosition() {
+					const r = this.r0 * (1 + (this.e ? this.e * Math.sin(this.phiE) : 0));
+					const R = Math.hypot(canvas.width / dpr, canvas.height / dpr) * 0.5; // not used directly here
+					const x = Math.cos(this.theta) * r;
+					const y = Math.sin(this.theta) * r;
+
+					// Estimate current normalized radius for arm weighting
+					const w = canvas.width / dpr;
+					const h = canvas.height / dpr;
+					const Rg = Math.min(w, h) * 0.42;
+					const rNorm = clamp(r / Rg, 0, 1);
+
+					// Arm proximity boosts brightness slightly
+					this.armBoost = armWeight(rNorm, this.theta, simMyr);
+
+					// Project to screen
+					const p = projectToScreen(this.cx, this.cy, x, y, this.z);
+					this.x = x;
+					this.y = y;
+					this.sx = p.sx;
+					this.sy = p.sy;
+					this.depth = p.depth;
+				}
+
+				draw(ctx) {
+					const alpha = this.baseAlpha * (0.75 + 0.55 * this.armBoost);
+					const size = Math.max(0.6, this.size * config.starSize);
+
+					// Slight color shift toward blue inside arms
+					const hueShift = -10 * this.armBoost; // shift hue downward (toward blue)
+					const h = this.color.h + hueShift;
+					const s = this.color.s;
+					const l = this.color.l + 3 * this.armBoost;
+
+					ctx.globalAlpha = alpha;
+					if (size < 0.9) {
+						ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`;
+						ctx.fillRect(this.sx, this.sy, 1, 1);
+					} else {
+						ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`;
+						ctx.beginPath();
+						ctx.arc(this.sx, this.sy, size, 0, Math.PI * 2);
+						ctx.fill();
+					}
+					ctx.globalAlpha = 1;
+				}
+			}
+
+			class Dust {
+				constructor(cx, cy, R) {
+					this.cx = cx;
+					this.cy = cy;
+
+					// Place dust along spiral arms, offset to inner/leading edge
+					const rNorm = clamp(
+						0.2 + Math.random() * 0.7 + randn() * 0.05,
+						0.08,
+						0.96
+					);
+					this.r0 = rNorm * R;
+
+					const pitch = (GALAXY.pitchDeg * Math.PI) / 180;
+					const invTan = 1 / Math.tan(pitch);
+					const armIndex = Math.floor(Math.random() * GALAXY.arms);
+					const armPhase = (armIndex / GALAXY.arms) * 2 * Math.PI;
+					const thetaRidge0 =
+						armPhase + invTan * Math.log((rNorm + 1e-6) / 0.25);
+
+					// Leading-edge offset (dust lanes)
+					const laneOffset = -(0.03 + 0.05 * rNorm); // negative = leading side for positive rotation
+					const scatter = randn() * (0.03 + 0.06 * rNorm);
+					this.theta = thetaRidge0 + laneOffset + scatter;
+
+					this.omega = rotationOmega(rNorm) * (0.95 + Math.random() * 0.1);
+					this.e = 0.01 + Math.random() * 0.02;
+					this.phiE = Math.random() * Math.PI * 2;
+					this.kappa = epicycleKappa(this.omega);
+
+					// Very thin vertical distribution for dust
+					this.z = randn() * (GALAXY.diskThicknessPx * 0.4);
+
+					this.size = 0.8 + Math.random() * 2.2; // drawn as soft smudges
+					this.alpha = 0.05 + Math.random() * 0.08;
+
+					this.x = 0;
+					this.y = 0;
+					this.sx = 0;
+					this.sy = 0;
+					this.depth = 0;
+					this.updatePosition();
+				}
+
+				update(dtMyr) {
+					const speed = config.orbitalSpeed;
+					this.theta += this.omega * dtMyr * speed;
+					this.phiE += this.kappa * dtMyr * speed;
+					this.updatePosition();
+				}
+
+				updatePosition() {
+					const r = this.r0 * (1 + this.e * Math.sin(this.phiE));
+					const x = Math.cos(this.theta) * r;
+					const y = Math.sin(this.theta) * r;
+					const p = projectToScreen(this.cx, this.cy, x, y, this.z);
+					this.sx = p.sx;
+					this.sy = p.sy;
+					this.depth = p.depth;
+				}
+
+				draw(ctx) {
+					// Draw as dark, soft blob (extinction)
+					const s = this.size;
+					const grd = ctx.createRadialGradient(
+						this.sx,
+						this.sy,
+						0,
+						this.sx,
+						this.sy,
+						s * 3.0
+					);
+					grd.addColorStop(0.0, `rgba(10,10,10,${this.alpha * 1.2})`);
+					grd.addColorStop(0.6, `rgba(10,10,10,${this.alpha * 0.6})`);
+					grd.addColorStop(1.0, "rgba(0,0,0,0)");
+					ctx.fillStyle = grd;
+					ctx.beginPath();
+					ctx.arc(this.sx, this.sy, s * 3.0, 0, Math.PI * 2);
+					ctx.fill();
+				}
+			}
+
+			// Cached core glow
+			let coreGlowCanvas = null;
+			function drawCoreGlow() {
+				if (!coreGlowCanvas) {
+					coreGlowCanvas = document.createElement("canvas");
+					const w = canvas.width / dpr;
+					const h = canvas.height / dpr;
+					coreGlowCanvas.width = Math.max(2, Math.floor(w));
+					coreGlowCanvas.height = Math.max(2, Math.floor(h));
+					const gctx = coreGlowCanvas.getContext("2d");
+					const cx = w / 2,
+						cy = h / 2;
+					const R = Math.min(w, h) * 0.42;
+
+					const grad = gctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.75);
+					grad.addColorStop(0, "rgba(255, 235, 180, 0.38)");
+					grad.addColorStop(0.2, "rgba(255, 220, 160, 0.28)");
+					grad.addColorStop(0.5, "rgba(180, 170, 200, 0.09)");
+					grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+					gctx.fillStyle = grad;
+					gctx.fillRect(0, 0, w, h);
+				}
+				ctx.drawImage(coreGlowCanvas, 0, 0);
+			}
+
+			function drawArmsOverlay() {
+				if (!config.showArms) return;
+				const w = canvas.width / dpr;
+				const h = canvas.height / dpr;
+				const cx = w / 2,
+					cy = h / 2;
+				const R = Math.min(w, h) * 0.42;
+				const pitch = (GALAXY.pitchDeg * Math.PI) / 180;
+				const invTan = 1 / Math.tan(pitch);
+				const phase = GALAXY.patternSpeed * simMyr;
+
+				ctx.lineWidth = 1.1;
+				ctx.strokeStyle = "rgba(255, 255, 255, 0.07)";
+
+				for (let a = 0; a < GALAXY.arms; a++) {
+					const armPhase = (a / GALAXY.arms) * 2 * Math.PI + phase;
+					ctx.beginPath();
+					let started = false;
+					const segments = 500;
+					for (let i = 0; i <= segments; i++) {
+						const s = i / segments;
+						const r = Math.max(0.02, s) * R;
+						const rNorm = r / R;
+						const theta = armPhase + invTan * Math.log((rNorm + 1e-6) / 0.25);
+
+						// Convert to 3D then project to screen
+						const x = Math.cos(theta) * r;
+						const y = Math.sin(theta) * r;
+						const p = projectToScreen(cx, cy, x, y, 0);
+						if (!started) {
+							ctx.moveTo(p.sx, p.sy);
+							started = true;
+						} else {
+							ctx.lineTo(p.sx, p.sy);
+						}
+					}
+					ctx.stroke();
+				}
+			}
+
+			function createGalaxy() {
+				stars.length = 0;
+				dust.length = 0;
+
+				const w = canvas.width / dpr;
+				const h = canvas.height / dpr;
+				const cx = w / 2;
+				const cy = h / 2;
+				const R = Math.min(w, h) * 0.42;
+
+				const { starsCount, dustCount } = galaxyCounts();
+
+				coreGlowCanvas = null; // refresh glow if size changed
+
+				for (let i = 0; i < starsCount; i++) {
+					stars.push(new Star(cx, cy, R));
+				}
+				if (config.showDust) {
+					for (let i = 0; i < dustCount; i++) {
+						dust.push(new Dust(cx, cy, R));
+					}
+				}
+			}
+
+			function updateControls() {
+				document.getElementById("speedValue").textContent =
+					orbitalSpeedSlider.value;
+				document.getElementById("sizeValue").textContent =
+					planetSizeSlider.value;
+				document.getElementById("orbitValue").textContent =
+					showOrbitsSlider.value == 1 ? "On" : "Off";
+				document.getElementById("asteroidValue").textContent =
+					asteroidBeltSlider.value == 1 ? "On" : "Off";
+
+				const prevDust = config.showDust;
+				config.orbitalSpeed = parseFloat(orbitalSpeedSlider.value) / 100;
+				config.starSize = parseFloat(planetSizeSlider.value);
+				config.showArms = showOrbitsSlider.value == 1;
+				config.showDust = asteroidBeltSlider.value == 1;
+
+				if (prevDust !== config.showDust) {
+					createGalaxy();
+				}
+			}
+
+			function animate() {
+				const now = performance.now();
+				const dtSec = Math.min(0.05, (now - lastTime) / 1000);
+				lastTime = now;
+
+				if (!isPaused && !document.hidden) {
+					const dtMyr = dtSec * GALAXY.baseMyrPerSecond;
+					simMyr += dtMyr * config.orbitalSpeed;
+
+					const w = canvas.width / dpr;
+					const h = canvas.height / dpr;
+
+					// Clear
+					ctx.clearRect(0, 0, w, h);
+
+					// Core glow and arm overlay
+					drawCoreGlow();
+					drawArmsOverlay();
+
+					// Update motion
+					for (let i = 0; i < stars.length; i++) stars[i].update(dtMyr);
+					if (config.showDust)
+						for (let i = 0; i < dust.length; i++) dust[i].update(dtMyr);
+
+					// Depth sort (far -> near)
+					const renderList = [];
+					for (let i = 0; i < stars.length; i++) {
+						renderList.push({ depth: stars[i].depth, type: 0, obj: stars[i] });
+					}
+					if (config.showDust) {
+						for (let i = 0; i < dust.length; i++) {
+							renderList.push({ depth: dust[i].depth, type: 1, obj: dust[i] });
+						}
+					}
+					renderList.sort((a, b) => a.depth - b.depth);
+
+					// Draw: far to near
+					for (let i = 0; i < renderList.length; i++) {
+						const item = renderList[i];
+						item.obj.draw(ctx);
+					}
+
+					// HUD (throttled)
+					if (Math.floor(now / 250) % 2 === 0) {
+						document.getElementById(
+							"timeDisplay"
+						).textContent = `Myr: ${Math.floor(simMyr)}`;
+						const total = stars.length + (config.showDust ? dust.length : 0);
+						document.getElementById(
+							"planetCountDisplay"
+						).textContent = `Particles: ${total}`;
+					}
+				}
+
+				animationId = requestAnimationFrame(animate);
+			}
+
+			function resetSimulation() {
+				simMyr = 0;
+				updateControls();
+				createGalaxy();
+			}
+
+			function togglePause() {
+				isPaused = !isPaused;
+				document.getElementById("pauseBtn").textContent = isPaused
+					? "Resume"
+					: "Pause";
+			}
+
+			// Events
+			[orbitalSpeedSlider, planetSizeSlider, showOrbitsSlider].forEach(
+				(slider) => {
+					slider.addEventListener("input", updateControls);
+				}
+			);
+			asteroidBeltSlider.addEventListener("change", () => {
+				updateControls();
+			});
+
+			window.addEventListener("resize", () => {
+				resizeCanvas();
+				resetSimulation();
+			});
+
+			document.addEventListener("visibilitychange", () => {
+				if (document.hidden) {
+					isPaused = true;
+					document.getElementById("pauseBtn").textContent = "Resume";
+				}
+			});
+
+			window.addEventListener("beforeunload", () => {
+				if (animationId) cancelAnimationFrame(animationId);
+				stars.length = 0;
+				dust.length = 0;
+			});
+
+			// Init
+			updateControls();
+			createGalaxy();
+			animate();
+		</script>
+	</body>
+</html>
